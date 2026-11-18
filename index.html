@@ -1,0 +1,746 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Software Developer Roadmap</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: sticky tab bar; Overview = one-glance dashboard; Plan = 26 timed steps; Courses = grid by phase; each course has its own detail page (#course-slug) */
+:root{
+  --bg:#f4f6f9; --surface:#ffffff; --sunk:#eef1f6; --fg:#16202c; --muted:#5b6778; --line:#dde2ea;
+  --accent:#2f5bd3; --accent-soft:#e7edfb; --done:#1f8a5b; --done-soft:#e2f3ea; --qa:#c97a14;
+  --p0:#64748b; --p1:#d9822b; --p2:#c2410c; --p3:#0e7490; --p4:#15803d; --p5:#2f5bd3; --p6:#7c3aed; --p7:#be185d; --px:#8a94a6;
+  --f-display:"Bricolage Grotesque","Segoe UI",system-ui,sans-serif;
+  --f-body:"IBM Plex Sans","Segoe UI",system-ui,sans-serif;
+  --f-mono:"JetBrains Mono",Consolas,ui-monospace,monospace;
+  --r:12px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0e131a; --surface:#161d27; --sunk:#111821; --fg:#e7ecf3; --muted:#9aa6b7; --line:#263142;
+  --accent:#7d9cf5; --accent-soft:#1c2840; --done:#4cc28b; --done-soft:#132a1f; --qa:#f0a640;
+  --p0:#94a3b8; --p1:#f0a35a; --p2:#f0784a; --p3:#3bb6d1; --p4:#4ade80; --p5:#7d9cf5; --p6:#a78bfa; --p7:#f06ba8; --px:#8a94a6;
+  color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0e131a; --surface:#161d27; --sunk:#111821; --fg:#e7ecf3; --muted:#9aa6b7; --line:#263142;
+  --accent:#7d9cf5; --accent-soft:#1c2840; --done:#4cc28b; --done-soft:#132a1f; --qa:#f0a640;
+  --p0:#94a3b8; --p1:#f0a35a; --p2:#f0784a; --p3:#3bb6d1; --p4:#4ade80; --p5:#7d9cf5; --p6:#a78bfa; --p7:#f06ba8; --px:#8a94a6;
+  color-scheme:dark}
+
+*,*::before,*::after{box-sizing:border-box}
+[hidden]{display:none!important}
+html{scroll-padding-top:72px}
+body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.6 var(--f-body)}
+h1,h2,h3,h4{font-family:var(--f-display);text-wrap:balance;margin:0;line-height:1.15}
+h1{font-size:clamp(1.9rem,4.5vw,2.8rem);font-weight:800;letter-spacing:-.02em}
+h2{font-size:1.45rem;font-weight:800;letter-spacing:-.01em}
+h3{font-size:1.05rem;font-weight:600}
+p{margin:0}
+a{color:var(--accent)}
+a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
+.eyebrow{font:500 .7rem/1.2 var(--f-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.muted{color:var(--muted)}
+.file{font:400 .78rem/1.4 var(--f-mono);background:var(--sunk);border:1px solid var(--line);color:var(--fg);padding:1px 6px;border-radius:4px;display:inline-block;margin:2px 4px 2px 0;overflow-wrap:anywhere}
+.chip{display:inline-flex;align-items:center;gap:6px;font-size:.8rem;font-weight:500;color:var(--fg);text-decoration:none;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:3px 10px;margin:2px 4px 2px 0;cursor:pointer}
+.chip::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--c,var(--accent))}
+.chip:hover{border-color:var(--c,var(--accent))}
+.pill{font:500 .66rem/1 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;padding:5px 7px;border-radius:4px;border:1px solid var(--line);color:var(--muted);white-space:nowrap;display:inline-block}
+.pill.req{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.bar{height:6px;background:var(--line);border-radius:3px;overflow:hidden;display:flex}
+.bar i{display:block;height:100%}
+.bar .d{background:var(--done)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:18px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.st{width:9px;height:9px;border-radius:50%;display:inline-block;flex:0 0 auto}
+.st-n{background:var(--done)} .st-q{background:var(--qa)} .st-m{background:transparent;border:1.5px solid var(--muted)}
+.cov{display:flex;height:6px;border-radius:3px;overflow:hidden;background:var(--line)}
+.cov i{display:block;height:100%}
+.cov .n{background:var(--done)} .cov .q{background:var(--qa)} .cov .m{background:transparent}
+.key{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:.8rem;color:var(--muted)}
+.key span{display:inline-flex;align-items:center;gap:6px}
+
+/* Top bar */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+.top-in{max-width:1120px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.brand{font:800 1rem var(--f-display);color:var(--fg);text-decoration:none;padding-block:14px}
+.tabs{display:flex;gap:2px;overflow-x:auto}
+.tabs a{padding:15px 12px 12px;text-decoration:none;color:var(--muted);font-weight:600;font-size:.92rem;border-bottom:3px solid transparent;white-space:nowrap}
+.tabs a[aria-current="page"]{color:var(--fg);border-color:var(--accent)}
+.top-prog{margin-left:auto;font:500 .78rem var(--f-mono);color:var(--muted);font-variant-numeric:tabular-nums}
+@media (max-width:560px){.top-prog{display:none}.brand{display:none}}
+
+.wrap{max-width:1120px;margin:0 auto;padding-block:32px 80px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.view{display:flex;flex-direction:column;gap:40px}
+.section{display:flex;flex-direction:column;gap:14px}
+.sec-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap}
+.lede{max-width:68ch;color:var(--muted);font-size:1.02rem}
+
+/* Overview */
+.hero{display:flex;flex-direction:column;gap:12px}
+.pace{display:inline-flex;flex-wrap:wrap;gap:8px}
+.pace span{font-size:.85rem;background:var(--accent-soft);color:var(--fg);padding:4px 10px;border-radius:6px}
+.pace b{font-weight:600}
+.tiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.tile{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px;display:flex;flex-direction:column;gap:4px;min-width:0}
+.tile b{font:800 1.9rem/1.1 var(--f-display);font-variant-numeric:tabular-nums}
+.tile span{font-size:.85rem;color:var(--muted)}
+@media (max-width:760px){.tiles{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.track{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;counter-reset:ph}
+@media (max-width:900px){.track{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:520px){.track{grid-template-columns:1fr}}
+.phase-card{border-top:4px solid var(--c)}
+.phase-card .ph-top{display:flex;justify-content:space-between;gap:8px;align-items:baseline}
+.phase-card h3 a{color:var(--fg);text-decoration:none}
+.phase-card h3 a:hover{text-decoration:underline}
+.timeline{display:flex;height:14px;border-radius:7px;overflow:hidden;gap:2px}
+.timeline i{display:block;height:100%;background:var(--c)}
+.tl-labels{display:flex;justify-content:space-between;font:500 .72rem var(--f-mono);color:var(--muted)}
+.two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.three{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+@media (max-width:760px){.two,.three{grid-template-columns:1fr}}
+.split{display:flex;flex-direction:column;gap:8px}
+.split .row{display:grid;grid-template-columns:62px 1fr;gap:10px;align-items:baseline;font-size:.9rem}
+.split .row b{font:500 .78rem var(--f-mono);color:var(--accent);font-variant-numeric:tabular-nums}
+.callout{font-size:.9rem;color:var(--muted);padding:12px 14px;border:1px dashed var(--line);border-radius:10px}
+.callout b{color:var(--fg)}
+ol.clean,ul.clean{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px}
+.group.skip{background:transparent;border-style:dashed}
+
+/* Plan */
+.strip{display:flex;gap:3px;height:34px}
+.cell{border:0;border-radius:4px;background:var(--c);opacity:.3;cursor:pointer;padding:0;min-width:0}
+.cell.done{opacity:1}
+.cell:hover{opacity:.7}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:.8rem;color:var(--muted)}
+.legend button{all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.legend button:hover{color:var(--fg)}
+.legend button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.dot{width:10px;height:10px;border-radius:2px;background:var(--c);display:inline-block}
+.reset{background:none;border:1px solid var(--line);color:var(--muted);font:500 .76rem var(--f-mono);padding:4px 10px;border-radius:6px;cursor:pointer}
+.reset:hover{color:var(--fg);border-color:var(--muted)}
+.phase{display:flex;flex-direction:column;gap:12px;scroll-margin-top:72px}
+.phase-head{border-left:4px solid var(--c);padding-left:14px;display:flex;flex-direction:column;gap:4px}
+.steps{display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.step{display:grid;grid-template-columns:26px 96px 1fr;gap:4px 14px;padding:16px 18px;border-top:1px solid var(--line);align-items:start;scroll-margin-top:80px}
+.step:first-child{border-top:0}
+.step.is-done{background:var(--done-soft)}
+.step input{width:18px;height:18px;margin:3px 0 0;accent-color:var(--done);cursor:pointer}
+.sn{display:flex;flex-direction:column;gap:2px}
+.sn label{font:500 .8rem/1.9 var(--f-mono);color:var(--fg);cursor:pointer}
+.sn span{font:400 .72rem var(--f-mono);color:var(--muted);font-variant-numeric:tabular-nums}
+.sbody{min-width:0;display:flex;flex-direction:column;gap:8px}
+.topics{font-weight:500}
+.kv{display:flex;gap:10px;align-items:baseline;font-size:.88rem}
+.kv .k{flex:0 0 46px;font:500 .66rem/1.9 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.kv .v{min-width:0}
+.kv .v a{margin-right:12px}
+@media (max-width:600px){.step{grid-template-columns:24px 1fr}.sbody{grid-column:2}}
+.tbl{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:var(--r)}
+table{border-collapse:collapse;width:100%;font-size:.9rem}
+th,td{text-align:left;padding:12px 16px;border-top:1px solid var(--line);vertical-align:top}
+thead th{border-top:0;font:500 .68rem var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+td:first-child{font-family:var(--f-mono);white-space:nowrap;color:var(--muted);font-variant-numeric:tabular-nums}
+
+/* Courses */
+.filters{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.fgroup{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--surface);flex-wrap:wrap}
+.fgroup button{background:none;border:0;border-right:1px solid var(--line);color:var(--muted);font:500 .82rem var(--f-body);padding:7px 12px;cursor:pointer}
+.fgroup button:last-child{border-right:0}
+.fgroup button[aria-pressed="true"]{background:var(--accent-soft);color:var(--fg)}
+input[type=search]{flex:1 1 220px;min-width:0;font:400 .9rem var(--f-body);padding:8px 12px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--fg)}
+.cgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+@media (max-width:900px){.cgrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:560px){.cgrid{grid-template-columns:1fr}}
+.ccard{text-decoration:none;color:var(--fg);border-top:4px solid var(--c);transition:border-color .15s,transform .15s}
+.ccard:hover{border-color:var(--c);transform:translateY(-2px)}
+.ccard.opt{border-style:dashed;border-top-style:solid}
+.ccard .c-top{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}
+.ccard h3{font-size:1.08rem}
+.ccard .about{font-size:.86rem;color:var(--muted);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.ccard .meta{display:flex;justify-content:space-between;gap:8px;font:400 .74rem var(--f-mono);color:var(--muted);font-variant-numeric:tabular-nums;flex-wrap:wrap}
+.ccard .go{font-size:.82rem;font-weight:600;color:var(--accent)}
+@media (prefers-reduced-motion:reduce){.ccard{transition:none}.ccard:hover{transform:none}}
+.ph-group{display:flex;flex-direction:column;gap:12px}
+.ph-group > h3{display:flex;align-items:center;gap:8px}
+
+/* Course detail */
+.crumb{font-size:.88rem}
+.crumb a{text-decoration:none}
+.c-hero{border-top:6px solid var(--c);background:var(--surface);border-radius:var(--r);border-left:1px solid var(--line);border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:24px;display:flex;flex-direction:column;gap:14px}
+.c-hero .pills{display:flex;gap:6px;flex-wrap:wrap}
+.c-hero .prog{display:flex;flex-direction:column;gap:6px;max-width:520px}
+.c-hero .prog span{font:500 .8rem var(--f-mono);color:var(--muted);font-variant-numeric:tabular-nums}
+.facts{display:flex;flex-wrap:wrap;gap:8px 28px;font-size:.88rem}
+.facts div{display:flex;flex-direction:column}
+.facts b{font:800 1.25rem var(--f-display);font-variant-numeric:tabular-nums}
+.facts span{color:var(--muted)}
+.dgrid{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:20px;align-items:start}
+@media (max-width:860px){.dgrid{grid-template-columns:1fr}}
+.dmain,.dside{display:flex;flex-direction:column;gap:20px;min-width:0}
+.howto{counter-reset:s;list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px}
+.howto li{display:grid;grid-template-columns:30px 1fr;gap:10px;align-items:start;font-size:.92rem}
+.howto li::before{counter-increment:s;content:counter(s);width:26px;height:26px;border-radius:50%;background:var(--accent-soft);color:var(--accent);font:600 .8rem/26px var(--f-mono);text-align:center}
+.howto li div{min-width:0}
+.tlist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.tlist li{display:grid;grid-template-columns:18px 1fr auto;gap:10px;align-items:center;padding:8px 0;border-top:1px solid var(--line);font-size:.92rem}
+.tlist li:first-child{border-top:0}
+.tlist input{width:16px;height:16px;margin:0;accent-color:var(--done);cursor:pointer}
+.tlist label{min-width:0;cursor:pointer}
+.tlist li.checked label{color:var(--muted);text-decoration:line-through}
+.tstat{display:inline-flex;align-items:center;gap:6px;font:400 .72rem var(--f-mono);color:var(--muted);white-space:nowrap}
+.tgroup-h{display:flex;justify-content:space-between;align-items:baseline;margin-top:6px}
+.srcs{display:flex;flex-direction:column;gap:8px}
+.src{display:grid;grid-template-columns:auto 1fr;gap:4px 10px;padding:12px;border:1px solid var(--line);border-radius:10px;text-decoration:none;color:var(--fg);background:var(--surface)}
+.src:hover{border-color:var(--accent)}
+.src .stype{grid-row:span 2;font:500 .62rem var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);border:1px solid var(--line);border-radius:4px;padding:3px 6px;align-self:start}
+.src.first{border-color:var(--accent);background:var(--accent-soft)}
+.src.first .stype{background:var(--accent);border-color:var(--accent);color:var(--bg)}
+.src b{font-weight:600;font-size:.92rem;min-width:0;overflow-wrap:anywhere}
+.src em{font-style:normal;font-size:.8rem;color:var(--muted)}
+.flist{display:flex;flex-direction:column;gap:6px;margin:0;padding:0;list-style:none}
+.flist li{font:400 .82rem var(--f-mono);display:flex;gap:8px;align-items:baseline;overflow-wrap:anywhere}
+.flist li::before{content:"PDF";font:500 .6rem var(--f-mono);color:var(--muted);border:1px solid var(--line);border-radius:3px;padding:1px 4px;flex:0 0 auto}
+.flist li.img::before{content:"PNG"}
+.pn{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.pn a{text-decoration:none;font-weight:600;display:flex;flex-direction:column;gap:2px;padding:12px 16px;border:1px solid var(--line);border-radius:10px;background:var(--surface);min-width:0}
+.pn a span{font:500 .68rem var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.pn a.next{text-align:right;margin-left:auto}
+.build-list li{font-size:.9rem}
+.empty{color:var(--muted)}
+footer{color:var(--muted);font-size:.85rem;margin-top:48px}
+</style>
+
+<style>
+:root{--p8:#0f766e;--py:#a16207}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--p8:#2dd4bf;--py:#facc15}}
+:root[data-theme="dark"]{--p8:#2dd4bf;--py:#facc15}
+.picker{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+@media (max-width:900px){.picker{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:480px){.picker{grid-template-columns:1fr}}
+.pick{all:unset;box-sizing:border-box;cursor:pointer;background:var(--surface);border:1px solid var(--line);border-top:4px solid var(--c);border-radius:var(--r);padding:14px;display:flex;flex-direction:column;gap:4px;min-width:0}
+.pick b{font:600 1rem var(--f-display)}
+.pick span{font-size:.82rem;color:var(--muted)}
+.pick:hover{border-color:var(--c)}
+.pick:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.pick[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--c);box-shadow:inset 0 0 0 1px var(--c)}
+.pick[aria-pressed="true"] em::after{content:" · Your track";font-style:normal;color:var(--fg);font-weight:600}
+.pick em{font:500 .7rem var(--f-mono);font-style:normal;color:var(--muted);font-variant-numeric:tabular-nums}
+.fork{display:flex;align-items:center;gap:10px;font:500 .78rem var(--f-mono);color:var(--muted);letter-spacing:.06em;text-transform:uppercase}
+.fork::before,.fork::after{content:"";flex:1;height:1px;background:var(--line)}
+details.files{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px 18px}
+details.files summary{cursor:pointer;font-weight:600}
+details.files .tbl{margin-top:12px;border:0}
+.track-tag{font:500 .66rem var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--c)}
+#core-track{grid-template-columns:repeat(5,minmax(0,1fr))}
+#extra-track{grid-template-columns:repeat(3,minmax(0,1fr))}
+@media (max-width:1060px){#core-track{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:760px){#core-track,#extra-track{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:520px){#core-track,#extra-track{grid-template-columns:1fr}}
+@media (max-width:900px){.top-prog{display:none}}
+</style>
+
+<header class="top">
+  <div class="top-in">
+    <a class="brand" href="#overview" data-go="overview">Software Developer Roadmap</a>
+    <nav class="tabs" aria-label="Views">
+      <a href="#overview" data-go="overview" data-tab="overview">Overview</a>
+      <a href="#plan" data-go="plan" data-tab="plan">Step-by-step plan</a>
+      <a href="#courses" data-go="courses" data-tab="courses">Courses</a>
+    </nav>
+    <span class="top-prog" id="top-prog"></span>
+  </div>
+</header>
+
+<main class="wrap">
+  <!-- OVERVIEW -->
+  <div class="view" id="v-overview">
+    <section class="hero">
+      <span class="eyebrow">Built from every PDF in your Study Material folder</span>
+      <h1>Software Developer Roadmap</h1>
+      <p class="lede">One shared core that every software developer needs (programming, Java and Python, CS fundamentals, engineering practice, system design and interviews), then one specialization track you choose. DSA runs every weekend from day one.</p>
+      <div class="pace"><span><b>30 min</b> on weekdays</span><span><b>1 hour</b> on weekends</span><span><b>4.5 h</b> a week</span><span>about <b id="pace-months"></b> with your track</span></div>
+    </section>
+
+    <section class="tiles" id="tiles" aria-label="Progress"></section>
+
+    <section class="section">
+      <div class="sec-head"><h2>The roadmap at a glance</h2><span class="muted" style="font-size:.88rem">Click a course to open its page</span></div>
+      <div class="timeline" id="timeline" aria-hidden="true"></div>
+      <div class="tl-labels" id="tl-labels"></div>
+      <div class="track" id="core-track"></div>
+      <div class="fork">Then pick one track</div>
+      <div class="picker" id="picker-ov"></div>
+      <div class="track" id="extra-track"></div>
+    </section>
+
+    <section class="section">
+      <h2>Your study routine</h2>
+      <div class="three">
+        <div class="card"><span class="eyebrow">Monday to Friday</span><h3>30 minutes</h3>
+          <div class="split">
+            <div class="row"><b>20 min</b><span>Learn the step's topic from your notes or the <b>Start</b> source</span></div>
+            <div class="row"><b>10 min</b><span>Write the code or solve one small example yourself</span></div>
+          </div></div>
+        <div class="card"><span class="eyebrow">Saturday and Sunday</span><h3>1 hour</h3>
+          <div class="split">
+            <div class="row"><b>30 min</b><span>Work on the step's build project</span></div>
+            <div class="row"><b>30 min</b><span>DSA: solve 1 or 2 problems</span></div>
+          </div></div>
+        <div class="card"><span class="eyebrow">Last weekend of each step</span><h3>Revise</h3>
+          <p class="muted" style="font-size:.9rem">Test yourself with the matching file in <span class="file">600 + questions</span>, tick the topics you can explain on the course page, then move on.</p></div>
+      </div>
+      <div class="callout"><b>Which track?</b> Pick Full stack if you like building apps people use, QA/SDET if you like breaking things and automation, DevOps if you like servers and infrastructure, AI/ML if you enjoy maths and data. You can switch any time; the core stays the same.</div>
+    </section>
+
+    <section class="section">
+      <h2>How your folder is used</h2>
+      <div class="key"><span><i class="st st-n"></i>Notes in your folder</span><span><i class="st st-q"></i>Interview Q&amp;A only</span><span><i class="st st-m"></i>Not in folder (online source given)</span></div>
+      <div class="two">
+        <div class="card"><h3>Every PDF has a place</h3><p class="muted" style="font-size:.88rem" id="file-count"></p><div id="cov-summary"></div>
+          <a href="#courses" data-go="courses" data-scroll="all-files" style="font-size:.88rem">See every file and where it's used →</a></div>
+        <div class="card"><h3>Gaps in your notes</h3><p class="muted" style="font-size:.88rem">Your folder has little or nothing on these, so their course pages lead with an online source.</p><div id="gap-chips"></div></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>By the end you will have</h2>
+      <div class="two">
+        <div class="card"><h3>From the core</h3><ul class="clean">
+          <li>C, Java and Python programs on GitHub</li>
+          <li>Strong CS fundamentals: OS, DBMS, SQL and networks</li>
+          <li>About 150 DSA problems solved on weekends</li>
+          <li>System designs for a URL shortener and Zomato</li>
+          <li>Aptitude practice for TCS NQT and other campus tests</li></ul></div>
+        <div class="card"><h3>From your track</h3><ul class="clean" id="track-outcomes"></ul></div>
+      </div>
+    </section>
+  </div>
+
+  <!-- PLAN -->
+  <div class="view" id="v-plan" hidden>
+    <section class="section">
+      <span class="eyebrow" id="plan-eyebrow"></span>
+      <h2>Step-by-step plan</h2>
+      <p class="lede" style="font-size:.95rem">Do the 16 core steps in order, then the steps of your track. Each step shows how many weeks it takes at your pace, what to read, where to learn and what to build.</p>
+      <div class="sec-head"><h3>Your progress</h3><span><span class="top-prog" id="plan-prog" style="margin:0"></span> <button class="reset" id="reset" type="button">Clear</button></span></div>
+      <div class="strip" id="strip"></div>
+      <div class="legend" id="legend"></div>
+    </section>
+    <div id="phases" class="view"></div>
+    <div class="fork">Your specialization track</div>
+    <div class="picker" id="picker-plan"></div>
+    <div id="track-phase" class="view"></div>
+    <section class="section">
+      <h2>DSA on weekends</h2>
+      <p class="lede" style="font-size:.95rem">30 minutes every Saturday and Sunday, from week 1 to the end. Follow the DSASheet order on LeetCode or GeeksforGeeks. <a href="#course-dsa" data-go="course-dsa">Open the DSA course page</a>.</p>
+      <div class="tbl"><table><thead><tr><th>Weeks</th><th>Topic</th><th>Your files</th></tr></thead><tbody id="dsa-body"></tbody></table></div>
+    </section>
+  </div>
+
+  <!-- COURSES -->
+  <div class="view" id="v-courses" hidden>
+    <section class="section">
+      <span class="eyebrow" id="courses-eyebrow"></span>
+      <h2>Courses</h2>
+      <p class="lede" style="font-size:.95rem">Each card shows how much of the course your folder covers. Open a course for its topics, study steps, sources and projects.</p>
+      <div class="key"><span><i class="st st-n"></i>Notes in your folder</span><span><i class="st st-q"></i>Interview Q&amp;A only</span><span><i class="st st-m"></i>Not in folder</span></div>
+      <div class="filters">
+        <div class="fgroup" role="group" aria-label="Filter by level" id="f-level">
+          <button type="button" data-v="all" aria-pressed="true">All levels</button><button type="button" data-v="Basic" aria-pressed="false">Basic</button><button type="button" data-v="Intermediate" aria-pressed="false">Intermediate</button><button type="button" data-v="Advanced" aria-pressed="false">Advanced</button>
+        </div>
+        <div class="fgroup" role="group" aria-label="Filter courses" id="f-show">
+          <button type="button" data-v="all" aria-pressed="true">All</button><button type="button" data-v="core" aria-pressed="false">Core</button><button type="button" data-v="mine" aria-pressed="false">My track</button><button type="button" data-v="gaps" aria-pressed="false">Has gaps</button>
+        </div>
+        <input type="search" id="f-search" placeholder="Search a course or topic, e.g. pointers" aria-label="Search courses and topics">
+      </div>
+    </section>
+    <div id="cgroups" class="view" style="gap:28px"></div>
+    <p class="empty" id="c-empty" hidden>No courses match. Choose All or clear the search.</p>
+    <details class="files" id="all-files"><summary>Every file in your folder and where it's used</summary><div class="tbl"><table><thead><tr><th>File</th><th>Course</th><th>Group</th></tr></thead><tbody id="files-body"></tbody></table></div></details>
+  </div>
+
+  <!-- COURSE DETAIL -->
+  <div class="view" id="v-course" hidden></div>
+
+  <footer>Your ticks and track choice are saved in this browser only. Built from the files in your Study Material folder. Most PDFs are scanned images, so coverage is matched from file names and the readable interview files. For a deeper full stack plan, open <a href="Full_Stack_Study_Plan.html">Full_Stack_Study_Plan.html</a> in the same folder.</footer>
+</main>
+
+<script>
+/* ===== DATA ===== */
+const PHASES=[
+ {name:"Programming foundations",c:"--p0",note:"Learn how code works with C, then the terminal and Git you'll use every day."},
+ {name:"Java & Python",c:"--p2",note:"Java is your main language (your strongest notes). Python is the second, for scripts, testing and AI."},
+ {name:"CS fundamentals",c:"--p3",note:"Operating systems, databases and networks. Asked in almost every campus and product-company interview."},
+ {name:"Engineering practice",c:"--p4",note:"How real teams build software: APIs, testing, Agile and containers."},
+ {name:"System design & interviews",c:"--p7",note:"Design at scale, then prepare for interviews and aptitude tests.",after:"Core done: you are ready for junior developer interviews. Now pick your track."},
+ {name:"Full stack web",c:"--p5",track:"A",tag:"Build web apps end to end",out:["A React + Spring Boot + PostgreSQL app with JWT login","The same API in Node.js + Express","Deployed on AWS with CI/CD"],note:"Frontend, backend and deployment. For the deepest version, see Full_Stack_Study_Plan.html."},
+ {name:"QA / SDET automation",c:"--p1",track:"B",tag:"Test and automate software",out:["Selenium and Playwright UI test suites","A REST Assured API test suite","Load tests and tests running in CI"],note:"Your folder is strong here: Selenium, Playwright, Rest Assured, Postman and performance testing notes."},
+ {name:"DevOps & cloud",c:"--p6",track:"C",tag:"Run software in production",out:["Apps running on Kubernetes","An AWS deployment with load balancing","CI/CD pipelines and a Kafka setup"],note:"Networking, containers, Kubernetes, AWS and pipelines."},
+ {name:"AI / ML engineer",c:"--p8",track:"D",tag:"Work with data and models",out:["Classic ML models on Kaggle datasets","A deep learning image or text model","A RAG app with a vector database"],note:"Uses your maths, ML, deep learning, data mining and GenAI notes."}
+];
+const GROUPS_EXTRA=[{key:"x",name:"Every weekend",c:"--px",note:"DSA from week 1 to the end."},{key:"y",name:"Optional side tracks",c:"--py",note:"Theory, embedded and graphics, for GATE, college exams or curiosity."}];
+const STEPS=[
+ {s:"1",p:0,w:3,c:["c"],t:"C programming: variables, loops, functions, arrays, strings, pointers, structs, memory",f:["Crafted_Note Cprogramming"],b:"Solve 20 basic problems in C (patterns, primes, arrays)"},
+ {s:"2",p:0,w:3,c:["linux","git"],t:"Linux commands, file permissions, processes; Git: commit, branch, merge, rebase, GitHub",f:["Linux pdf","Git Notes","Git top 20 concepts","Git interview"],b:"Create a GitHub repo and push all your C programs"},
+ {s:"3",p:1,w:4,c:["java","oop"],t:"Java basics and OOP: classes, inheritance, polymorphism, abstraction, interfaces, exceptions",f:["Java complete","Java Interface Abstraction","50 Oops question","Java Star Pattern"],b:"Bank account console app"},
+ {s:"4",p:1,w:4,c:["java"],t:"Collections, HashMap internals, generics, Streams, lambdas, Optional",f:["Collections","Java collection Shortcuts","Java Stream and Lambda expressions","Java Tricky"],b:"Student records manager using Streams"},
+ {s:"5",p:1,w:3,c:["java","oop"],t:"JVM memory, garbage collection, multithreading, SOLID, design patterns",f:["JEV Model","SOLID Principle"],b:"Refactor the bank app with SOLID and add a multithreaded report"},
+ {s:"6",p:1,w:3,c:["python"],t:"Python: syntax, lists, dicts, functions, OOP, files, pattern programs",f:["Python cheat sheet","Python Quick Notes","Python sheet 2","Python part 3","Python Pattern"],b:"Script that sorts the files in a folder by type"},
+ {s:"7",p:2,w:3,c:["os"],t:"Operating systems: processes, threads, scheduling, deadlocks, memory and paging",f:["Crafted_Note Operating system"],b:"A Java demo of threads and a deadlock, with notes on why it happens"},
+ {s:"8",p:2,w:3,c:["sql"],t:"SQL: SELECT, JOINs, GROUP BY, subqueries, CTEs, window functions",f:["Sql Sheet","Sql cheat sheet","Sql important cheat sheet","Sql part 2","Advance SQL concepts"],b:"Solve 30 problems from LeetCode SQL 50"},
+ {s:"9",p:2,w:2,c:["dbms"],t:"DBMS: ER model, normalization, ACID, transactions, indexing, PostgreSQL",f:["DBMS","Crafted_Note Dbms","ACID properties","Db indexing","PostgreSql"],b:"ER diagram and schema for a library system"},
+ {s:"10",p:2,w:3,c:["network"],t:"Networks: OSI and TCP/IP, HTTP, DNS, TLS, network security basics",f:["Computer Networks notes 1","Network security"],b:"Trace a web request in browser dev tools and explain each step"},
+ {s:"11",p:3,w:2,c:["rest"],t:"REST APIs: methods, status codes, JSON, testing with Postman",f:["Rest Api","Postman Notes"],b:"A Postman collection that tests a public API"},
+ {s:"12",p:3,w:2,c:["testing"],t:"Testing basics: test cases, test levels, bug life cycle, unit tests with JUnit",f:["Manual testing"],b:"Test cases and JUnit tests for the bank app"},
+ {s:"13",p:3,w:1,c:["agile"],t:"Agile, Scrum, Jira boards and sprints; Excel for reports",f:["Jira notes","Excel"],b:"Plan your next 4 weeks as a Jira board"},
+ {s:"14",p:3,w:2,c:["docker"],t:"Docker: images, containers, Dockerfile, volumes, docker-compose",f:["Docker notes","Docker Revision notes","Docker top 10 concept"],b:"Run your Java app in a Docker container"},
+ {s:"15",p:4,w:4,c:["sysdesign"],t:"System design: scalability, load balancing, caching, sharding, CAP, microservices, queues",f:["System design part 1","System design part 2","System Design 1.png","System design 2.png"],b:"Draw designs for a URL shortener and Zomato"},
+ {s:"16",p:4,w:3,c:["interview","aptitude"],t:"Interview revision with 600+ questions; aptitude: time and work, ratio, TCS NQT",f:["Time & Work","Time_and_Work_50_Questions_with_Solutions-1","Ratio & Proportion","Top 40 TCS NQT problems"],b:"One timed aptitude test and one mock interview each week"},
+ {s:"A1",p:5,w:4,c:["htmlcss"],t:"HTML semantics, forms, accessibility; CSS box model, Flexbox, Grid, responsive design",f:["HTML_CSS_Interview_Questions"],b:"Responsive landing page"},
+ {s:"A2",p:5,w:6,c:["js"],t:"JavaScript: closures, this, ES6+, DOM, events, event loop, promises, fetch",f:["Java script 2","JavaScript_Interview_Questions"],b:"Todo app and weather app"},
+ {s:"A3",p:5,w:2,c:["ts"],t:"TypeScript: types, interfaces, generics, narrowing, utility types",f:["Typescript","Typescript 2"],b:"Convert the weather app to TypeScript"},
+ {s:"A4",p:5,w:6,c:["react"],t:"React: components, props, state, hooks, router, data fetching",f:["Top 30 ReachJs question","React_NodeJS_Interview"],b:"Dashboard in React + TypeScript"},
+ {s:"A5",p:5,w:6,c:["spring"],t:"Spring Boot: DI, REST controllers, JPA, Spring Security, JWT",f:["Spring boot 30 concepts","SpringBoot_Interview_Questions"],b:"REST API with PostgreSQL and JWT login, used by your React app"},
+ {s:"A6",p:5,w:3,c:["nosql"],t:"MongoDB documents and aggregation; Redis caching and TTL",f:["Mongo db","Redis"],b:"Cache your API with Redis"},
+ {s:"A7",p:5,w:3,c:["node"],t:"Node.js + Express: event loop, middleware, REST, Mongoose",f:["NodeJs"],b:"Rebuild the API in Express + MongoDB"},
+ {s:"A8",p:5,w:4,c:["aws","cicd"],t:"Deploy: AWS EC2, RDS, S3; GitHub Actions CI/CD",f:["Aws notes","Cloud computing"],b:"Deploy the full stack app on AWS with a CI/CD pipeline"},
+ {s:"B1",p:6,w:4,c:["selenium"],t:"Selenium WebDriver: locators, waits, page object model, TestNG",f:["Selenium","Selenium_Interview_Questions"],b:"Automate login and search on a demo site"},
+ {s:"B2",p:6,w:4,c:["playwright"],t:"Playwright: locators, auto-waiting, fixtures, tracing, parallel runs",f:["Playwright","Playwright cheat sheet","Playwright_Interview_Questions"],b:"Playwright suite with page objects and reports"},
+ {s:"B3",p:6,w:3,c:["restassured"],t:"API automation with REST Assured: requests, assertions, auth, JSON schema",f:["Rest Assured","REST_Assured_Interview_Questions","Postman Notes"],b:"API test suite for a public API"},
+ {s:"B4",p:6,w:2,c:["perf"],t:"Performance testing: load, stress, spike tests, metrics, JMeter or k6",f:["Performance Testing Notes"],b:"Load test an API and report response times"},
+ {s:"B5",p:6,w:2,c:["cicd"],t:"Run tests in CI: GitHub Actions, reports, test data",f:[],b:"Run your UI and API suites on every push"},
+ {s:"B6",p:6,w:2,c:["aitest"],t:"AI for testers: generating test cases, test data and reviewing failures with AI",f:["AI for Testers"],b:"Use an AI tool to draft and review test cases"},
+ {s:"C1",p:7,w:3,c:["netadv"],t:"Advanced networking: subnetting, routing, switching, VLANs, firewalls (CCNP notes)",f:["CCNP notes","Network security"],b:"Subnet a network for a small office on paper"},
+ {s:"C2",p:7,w:4,c:["k8s"],t:"Kubernetes: pods, deployments, services, ingress, ConfigMaps, Helm",f:["Kubernates Notes"],b:"Run your Dockerized app on minikube"},
+ {s:"C3",p:7,w:5,c:["aws"],t:"AWS and cloud: EC2, S3, RDS, IAM, VPC, load balancers, auto scaling, Lambda",f:["Aws notes","Cloud computing"],b:"Deploy an app on AWS behind a load balancer"},
+ {s:"C4",p:7,w:2,c:["cicd"],t:"CI/CD: GitHub Actions pipelines, secrets, Docker image builds",f:[],b:"Pipeline that builds, tests and deploys on every push"},
+ {s:"C5",p:7,w:3,c:["messaging"],t:"Kafka, RabbitMQ, Elasticsearch and Redis in production",f:["Kafka cheat sheet","Kafka RabitMQ","Elastic search","Redis"],b:"Run Kafka with docker-compose and send events between two services"},
+ {s:"D1",p:8,w:5,c:["math"],t:"Maths for ML: linear algebra, calculus, limits, integrals, probability basics",f:["Linear algebra notes","Calculus Notes","Calculus","Limit Continuity","Integral top 15","Crafted_Note Mathematics part1"],b:"Implement vectors, matrix multiply and gradient descent in Python"},
+ {s:"D2",p:8,w:5,c:["ml"],t:"Machine learning: regression, classification, trees, clustering, evaluation",f:["Machine Learning"],b:"Train and compare models on a Kaggle dataset"},
+ {s:"D3",p:8,w:2,c:["datamining"],t:"Data mining: preprocessing, association rules, clustering, pandas",f:["Crafted_Note Data Mining"],b:"Clean and analyse a real dataset with pandas"},
+ {s:"D4",p:8,w:5,c:["dl"],t:"Deep learning: neural networks, backprop, CNNs, RNNs, transformers",f:["Crafted_Note Deep Learning Part 1","Deep Learning Part 3"],b:"Image or text classifier in PyTorch"},
+ {s:"D5",p:8,w:4,c:["genai"],t:"GenAI: LLM APIs, prompting, embeddings, vector databases, RAG, agents, MCP",f:["GenAi","AI Agent For Developers","Mcp for dev","Vector database notes","Ai handbook"],b:"RAG app that answers questions from your own PDFs"}
+];
+const COURSES=[
+ {s:"c",n:"C programming",ph:0,lv:"Basic",req:true,about:"Your first language for understanding how programs use memory. Pointers and arrays here make every other language easier.",pre:[],files:["Crafted_Note Cprogramming"],qa:[],t:["Variables, data types, operators|r|n","Conditions and loops|r|n","Functions and recursion|r|n","Arrays and strings|r|n","Pointers|r|n","Structures and unions|r|n","Dynamic memory (malloc, free)|r|n","File handling|o|n","Preprocessor and macros|o|n"]},
+ {s:"linux",n:"Linux & command line",ph:0,lv:"Basic",req:true,about:"Use the terminal to move around files, run programs and manage servers.",pre:[],files:["Linux pdf"],qa:[],t:["Files, folders and navigation|r|n","File permissions|r|n","Processes and signals|r|n","Pipes, grep, find|r|n","Environment variables|r|n","SSH|r|n","Shell scripting|o|n","Cron jobs|o|n"]},
+ {s:"git",n:"Git & GitHub",ph:0,lv:"Basic",req:true,about:"Track every change to your code and collaborate through pull requests.",pre:[],files:["Git Notes","Git top 20 concepts","Git interview"],qa:["Git_GitHub_Interview_Questions"],t:["init, add, commit, log|r|n","Branching|r|n","Merge vs rebase|r|n","Resolving conflicts|r|n","Push, pull, fetch|r|n","Pull requests|r|n","Reset vs revert|r|n","Stash and cherry-pick|o|n"]},
+ {s:"java",n:"Java",ph:1,lv:"Basic",req:true,about:"Your main language. Strong typing, OOP and a huge job market in India and abroad.",pre:["c"],files:["Java complete","Collections","Java collection Shortcuts","Java Stream and Lambda expressions","Java Tricky","JEV Model","Java Interface Abstraction","Java Star Pattern"],qa:["Java_Interview_Questions"],t:["Syntax and control flow|r|n","Classes and objects|r|n","Inheritance and polymorphism|r|n","Abstraction and interfaces|r|n","Exception handling|r|n","Strings|r|n","Collections and HashMap internals|r|n","Generics|r|n","Streams and lambdas|r|n","JVM memory model|r|n","Multithreading|r|n","Garbage collection|o|n","Pattern programs|o|n"]},
+ {s:"oop",n:"OOP & design principles",ph:1,lv:"Intermediate",req:true,about:"Structure code so it stays easy to change: the four pillars, SOLID and design patterns.",pre:["java"],files:["SOLID Principle","50 Oops question"],qa:[],t:["Four pillars of OOP|r|n","SOLID principles|r|n","Design patterns: Singleton, Factory, Builder, Strategy|r|m","Clean code|o|m","UML class diagrams|o|m"]},
+ {s:"python",n:"Python",ph:1,lv:"Basic",req:true,about:"A second language for scripts, automation, testing and AI. Quick to write and read.",pre:["c"],files:["Python cheat sheet","Python cheat Sheet notes","Python Quick Notes","Python sheet 2","Python part 3","Python Pattern"],qa:["Python_Interview_Questions"],t:["Syntax and data types|r|n","Lists, dicts, sets, tuples|r|n","Functions and modules|r|n","OOP in Python|r|n","File handling|r|n","Exceptions|r|n","List comprehensions|r|n","Pattern programs|o|n","Virtual environments and pip|o|m"]},
+ {s:"os",n:"Operating systems",ph:2,lv:"Intermediate",req:true,about:"How the computer runs your programs: processes, threads, memory and deadlocks.",pre:["c"],files:["Crafted_Note Operating system"],qa:[],t:["Processes vs threads|r|n","CPU scheduling|r|n","Synchronization, mutex, semaphore|r|n","Deadlocks|r|n","Memory management and paging|r|n","Virtual memory|r|n","File systems|o|n"]},
+ {s:"sql",n:"SQL",ph:2,lv:"Basic",req:true,about:"Ask questions of relational data. Joins, grouping and window functions come up in almost every interview.",pre:[],files:["Sql Sheet","Sql cheat sheet","Sql important cheat sheet","Sql part 2","Copy of Sql part 2","Advance SQL concepts"],qa:["SQL_Interview_Questions"],t:["SELECT, WHERE, ORDER BY|r|n","JOINs|r|n","GROUP BY and HAVING|r|n","Subqueries|r|n","CTEs|r|n","Window functions|r|n","Views|o|n","Stored procedures and triggers|o|n"]},
+ {s:"dbms",n:"DBMS",ph:2,lv:"Intermediate",req:true,about:"The theory behind databases: normalization, transactions, ACID and indexing.",pre:["sql"],files:["DBMS","Crafted_Note Dbms","ACID properties","Db indexing","PostgreSql"],qa:[],t:["ER model|r|n","Keys and constraints|r|n","Normalization|r|n","ACID properties|r|n","Transactions and isolation levels|r|n","Indexing|r|n","Query optimization|o|n","PostgreSQL basics|r|n"]},
+ {s:"network",n:"Computer networks",ph:2,lv:"Intermediate",req:true,about:"How data moves between computers: the layers, the protocols, and how the web works on top of them.",pre:[],files:["Computer Networks notes 1","Network security"],qa:[],t:["OSI and TCP/IP models|r|n","IP addressing|r|n","TCP vs UDP|r|n","HTTP and HTTPS|r|n","DNS|r|n","TLS|r|n","Network security basics|r|n","Firewalls|o|n"]},
+ {s:"rest",n:"REST APIs & Postman",ph:3,lv:"Intermediate",req:true,about:"How programs talk to each other over HTTP, and how to test those APIs in Postman.",pre:["network"],files:["Rest Api","Postman Notes"],qa:[],t:["REST principles|r|n","HTTP methods|r|n","Status codes|r|n","JSON|r|n","Idempotency|r|n","Postman collections and environments|r|n","OpenAPI / Swagger|o|m"]},
+ {s:"testing",n:"Software testing basics",ph:3,lv:"Basic",req:true,about:"Every developer tests. Learn test cases, test levels and how to write unit tests.",pre:["java"],files:["Manual testing"],qa:[],t:["SDLC and STLC|r|n","Test cases and test plans|r|n","Test levels and types|r|n","Bug life cycle|r|n","Unit testing with JUnit|r|m","Mocking with Mockito|o|m","TDD|o|m"]},
+ {s:"agile",n:"Agile, Jira & Excel",ph:3,lv:"Basic",req:true,about:"How software teams plan work in sprints, track it in Jira and report it in Excel.",pre:[],files:["Jira notes","Excel"],qa:[],t:["Agile and Scrum|r|n","User stories and sprints|r|n","Jira boards and workflows|r|n","Excel formulas and pivots|o|n"]},
+ {s:"docker",n:"Docker",ph:3,lv:"Intermediate",req:true,about:"Package an app and everything it needs into a container that runs the same everywhere.",pre:["linux"],files:["Docker notes","Docker Revision notes","Docker top 10 concept"],qa:["Docker_Interview_Questions"],t:["Images and containers|r|n","Dockerfile|r|n","Volumes|r|n","Networks|r|n","docker-compose|r|n","Docker Hub|r|n","Multi-stage builds|o|n"]},
+ {s:"sysdesign",n:"System design",ph:4,lv:"Advanced",req:true,about:"Design apps that serve millions of users: load balancers, caches, queues, sharding and microservices.",pre:["dbms","network","docker"],files:["System design part 1","System design part 2","System Design 1.png","System design 2.png"],qa:["System_Design_Interview_Questions"],t:["Vertical vs horizontal scaling|r|n","Load balancing|r|n","Caching and CDN|r|n","Replication and sharding|r|n","CAP theorem|r|n","Microservices vs monolith|r|n","API gateway and rate limiting|r|n","Message queues|r|n","Case study: Zomato|r|n","Case study: URL shortener|r|q"]},
+ {s:"interview",n:"Interview preparation",ph:4,lv:"Intermediate",req:true,about:"Revise every topic with your 600+ questions and practise explaining answers out loud.",pre:["java","dsa"],files:[],qa:["Java_Interview_Questions","Python_Interview_Questions","SQL_Interview_Questions","DSA_Interview_Questions","70 DSA Java Interview Solutions","Git_GitHub_Interview_Questions","Docker_Interview_Questions","System_Design_Interview_Questions","HTML_CSS_Interview_Questions","JavaScript_Interview_Questions","React_NodeJS_Interview","SpringBoot_Interview_Questions","Selenium_Interview_Questions","Playwright_Interview_Questions","REST_Assured_Interview_Questions","50 Oops question","Java Tricky","Top 30 ReachJs question"],t:["Core Java questions|r|q","OOP questions|r|q","SQL and DBMS questions|r|q","DSA questions|r|q","Git and Docker questions|r|q","System design questions|r|q","Track-specific questions|r|q","HR and behavioural questions|r|m","Mock interviews|r|m"]},
+ {s:"aptitude",n:"Aptitude & placement tests",ph:4,lv:"Basic",req:true,about:"Quantitative aptitude for TCS NQT and other campus tests: time and work, ratios and timed problems.",pre:[],files:["Time & Work","Time_and_Work_50_Questions_with_Solutions-1","Ratio & Proportion","Top 40 TCS NQT problems"],qa:[],t:["Time and work|r|n","Ratio and proportion|r|n","Percentages and profit and loss|r|m","Speed, time and distance|r|m","TCS NQT coding problems|r|n","Logical reasoning|o|m","Verbal ability|o|m"]},
+ {s:"dsa",n:"DSA",ph:"x",lv:"Basic",req:true,about:"Problem solving with data structures and algorithms. The main filter in coding interviews, so practise every weekend.",pre:[],files:["DSASheet","Time complexity","Array & String problems","Recursion","Sorting And Searching","Stack & Quoue","Tree & Graph","Tree and Graph","Coding Pattern"],qa:["70 DSA Java Interview Solutions","DSA_Interview_Questions"],t:["Time and space complexity|r|n","Arrays and strings|r|n","Recursion|r|n","Sorting and searching|r|n","Two pointers and sliding window|r|n","Hashing|r|n","Stack and queue|r|n","Linked list|r|n","Trees and BST|r|n","Heaps|r|n","Graphs: BFS, DFS, shortest path|r|n","Dynamic programming|r|n","Greedy|o|n","Backtracking|o|n"]},
+ {s:"htmlcss",n:"HTML & CSS",ph:5,lv:"Basic",req:true,about:"The structure and look of every web page, from semantic HTML to responsive layouts with Flexbox and Grid.",pre:["network"],files:[],qa:["HTML_CSS_Interview_Questions"],t:["Semantic HTML|r|q","Forms and validation|r|q","Accessibility basics|r|q","Box model|r|q","Selectors and specificity|r|q","Flexbox|r|q","Grid|r|q","Responsive design|r|q","Tailwind CSS|o|m"]},
+ {s:"js",n:"JavaScript",ph:5,lv:"Basic",req:true,about:"The language of the browser and the base for React, TypeScript and Node.js.",pre:["htmlcss"],files:["Java script 2"],qa:["JavaScript_Interview_Questions"],t:["Types, scope and hoisting|r|n","Closures and this|r|n","ES6+ features|r|n","DOM and events|r|n","Event loop|r|n","Promises and async/await|r|n","fetch and APIs|r|n","Modules|r|n"]},
+ {s:"ts",n:"TypeScript",ph:5,lv:"Intermediate",req:true,about:"JavaScript with types, the default for modern React projects.",pre:["js"],files:["Typescript","Typescript 2"],qa:[],t:["Basic types|r|n","Interfaces vs types|r|n","Generics|r|n","Unions and narrowing|r|n","Utility types|r|n","Decorators|o|n"]},
+ {s:"react",n:"React",ph:5,lv:"Intermediate",req:true,about:"The most popular library for building user interfaces from components.",pre:["js","ts"],files:[],qa:["Top 30 ReachJs question","React_NodeJS_Interview"],t:["JSX and components|r|q","Props and state|r|q","useEffect|r|q","Lists and forms|r|q","useContext and useRef|r|q","useMemo and useCallback|r|q","Custom hooks|r|m","React Router|r|m","Data fetching (TanStack Query)|r|m","Next.js|o|m"]},
+ {s:"spring",n:"Spring Boot",ph:5,lv:"Intermediate",req:true,about:"The most used Java framework for REST APIs, databases and security.",pre:["java","rest","dbms"],files:["Spring boot 30 concepts"],qa:["SpringBoot_Interview_Questions"],t:["IoC and dependency injection|r|n","Beans and auto-configuration|r|n","REST controllers and validation|r|n","Exception handling|r|n","Spring Data JPA|r|n","Transactions|r|n","Spring Security|r|n","JWT authentication|r|m","Microservices with Spring Cloud|o|m"]},
+ {s:"nosql",n:"MongoDB & Redis",ph:5,lv:"Intermediate",req:true,about:"A document database for flexible data, and an in-memory store for caching.",pre:["dbms"],files:["Mongo db","Redis"],qa:[],t:["MongoDB CRUD and schema design|r|n","Aggregation pipeline|r|n","Indexes|r|n","Redis data types|r|n","Caching patterns and TTL|r|n","Pub/Sub|o|n"]},
+ {s:"node",n:"Node.js & Express",ph:5,lv:"Intermediate",req:false,about:"JavaScript on the server, a common second backend in startups.",pre:["js","rest"],files:["NodeJs"],qa:["React_NodeJS_Interview"],t:["Event loop and async I/O|r|n","Modules and npm|r|n","Express routing|r|m","Middleware|r|m","Mongoose|o|m"]},
+ {s:"angular",n:"Angular",ph:5,lv:"Intermediate",req:false,about:"A full frontend framework from Google. Learn only if a target company uses it.",pre:["ts"],files:["Angular"],qa:[],t:["Components and templates|o|n","Services and DI|o|n","RxJS|o|n","Routing|o|n","Reactive forms|o|n"]},
+ {s:"selenium",n:"Selenium",ph:6,lv:"Intermediate",req:true,about:"The classic browser automation tool, still asked in most QA interviews.",pre:["java","testing"],files:["Selenium"],qa:["Selenium_Interview_Questions"],t:["WebDriver setup|r|n","Locators (XPath, CSS)|r|n","Waits|r|n","Page Object Model|r|n","TestNG|r|n","Handling frames, alerts, windows|r|n","Selenium Grid|o|n"]},
+ {s:"playwright",n:"Playwright",ph:6,lv:"Intermediate",req:true,about:"The modern end-to-end testing tool: fast, reliable and with built-in waiting.",pre:["testing"],files:["Playwright","Playwright cheat sheet"],qa:["Playwright_Interview_Questions"],t:["Locators and auto-waiting|r|n","Assertions|r|n","Fixtures|r|n","Page objects|r|n","Tracing and reports|r|n","Parallel runs|o|n","API testing in Playwright|o|n"]},
+ {s:"restassured",n:"REST Assured",ph:6,lv:"Intermediate",req:true,about:"Automate API tests in Java: send requests and check responses in code.",pre:["rest","java"],files:["Rest Assured","Postman Notes"],qa:["REST_Assured_Interview_Questions"],t:["Given/When/Then syntax|r|n","Request and response specs|r|n","Assertions and JSON path|r|n","Authentication|r|n","JSON schema validation|o|n","Data-driven tests|o|n"]},
+ {s:"perf",n:"Performance testing",ph:6,lv:"Advanced",req:false,about:"Find out how many users your app can handle before it slows down.",pre:["rest"],files:["Performance Testing Notes"],qa:[],t:["Load, stress, spike tests|r|n","Response time and throughput|r|n","JMeter basics|r|n","k6 basics|o|m","Reading results|r|n"]},
+ {s:"aitest",n:"AI for testers",ph:6,lv:"Advanced",req:false,about:"Use AI tools to write test cases, generate test data and review failures faster.",pre:["testing"],files:["AI for Testers"],qa:[],t:["Prompting for test cases|o|n","Generating test data|o|n","AI in test automation tools|o|n","Reviewing AI output|o|n"]},
+ {s:"netadv",n:"Advanced networking",ph:7,lv:"Advanced",req:true,about:"Routing, switching and subnetting, from your CCNP notes. The base of cloud networking.",pre:["network"],files:["CCNP notes","Network security"],qa:[],t:["Subnetting|r|n","Routing protocols|r|n","Switching and VLANs|r|n","NAT|r|n","Firewalls and ACLs|r|n","VPN|o|n"]},
+ {s:"k8s",n:"Kubernetes",ph:7,lv:"Advanced",req:true,about:"Run and scale many containers across machines.",pre:["docker"],files:["Kubernates Notes"],qa:[],t:["Pods|r|n","Deployments|r|n","Services|r|n","Ingress|r|n","ConfigMaps and Secrets|r|n","Helm|o|m"]},
+ {s:"aws",n:"AWS & cloud computing",ph:7,lv:"Advanced",req:true,about:"Run software on rented servers: compute, storage, databases, networks and permissions.",pre:["docker","linux"],files:["Aws notes","Cloud computing"],qa:[],t:["IaaS, PaaS, SaaS|r|n","EC2|r|n","S3|r|n","RDS|r|n","IAM|r|n","VPC|r|n","Load balancers and auto scaling|r|n","Lambda|o|n"]},
+ {s:"cicd",n:"CI/CD",ph:7,lv:"Intermediate",req:true,about:"Build, test and deploy automatically every time code is pushed.",pre:["git","docker"],files:[],qa:[],t:["GitHub Actions workflows|r|m","Build, test, deploy pipeline|r|m","Secrets and environments|r|m","Jenkins|o|m"]},
+ {s:"messaging",n:"Kafka, RabbitMQ & Elasticsearch",ph:7,lv:"Advanced",req:false,about:"Send events between services and search large amounts of data fast.",pre:["sysdesign"],files:["Kafka cheat sheet","Kafka RabitMQ","Elastic search"],qa:[],t:["Kafka topics and partitions|o|n","Consumer groups|o|n","RabbitMQ exchanges|o|n","Kafka vs RabbitMQ|o|n","Elasticsearch indexing and search|o|n"]},
+ {s:"math",n:"Maths for ML",ph:8,lv:"Intermediate",req:true,about:"The maths behind machine learning: vectors and matrices, derivatives and integrals.",pre:[],files:["Linear algebra notes","Calculus Notes","Calculus","Limit Continuity","Integral top 15","Crafted_Note Mathematics part1","Crafted_Note Engineering Mathematics Part 2","Trigonometry sheet"],qa:[],t:["Vectors and matrices|r|n","Eigenvalues and eigenvectors|r|n","Limits and continuity|r|n","Derivatives and gradients|r|n","Integrals|o|n","Probability and statistics|r|m","Trigonometry|o|n"]},
+ {s:"ml",n:"Machine learning",ph:8,lv:"Advanced",req:true,about:"Teach computers to learn from data: predict numbers, classify things and find groups.",pre:["python","math"],files:["Machine Learning"],qa:[],t:["Supervised vs unsupervised|r|n","Linear and logistic regression|r|n","Decision trees and random forests|r|n","Clustering (k-means)|r|n","Overfitting and regularization|r|n","Evaluation metrics|r|n","scikit-learn|r|m"]},
+ {s:"datamining",n:"Data mining",ph:8,lv:"Intermediate",req:false,about:"Find useful patterns in large datasets, and clean data before modelling.",pre:["python","sql"],files:["Crafted_Note Data Mining"],qa:[],t:["Data preprocessing|r|n","Association rules|o|n","Classification and clustering|o|n","pandas for data analysis|r|m"]},
+ {s:"dl",n:"Deep learning",ph:8,lv:"Advanced",req:true,about:"Neural networks that power image recognition, translation and LLMs.",pre:["ml"],files:["Crafted_Note Deep Learning Part 1","Deep Learning Part 3"],qa:[],t:["Neural networks and backpropagation|r|n","Activation and loss functions|r|n","CNNs|r|n","RNNs and LSTMs|r|n","Transformers and attention|r|n","PyTorch|r|m"]},
+ {s:"genai",n:"Generative AI & agents",ph:8,lv:"Advanced",req:true,about:"Build with LLMs: prompting, embeddings, vector databases, RAG, agents and MCP.",pre:["python","rest"],files:["GenAi","AI Agent For Developers","Mcp for dev","Vector database notes","Ai handbook"],qa:[],t:["Calling LLM APIs|r|n","Prompt engineering|r|n","Embeddings|r|n","Vector databases|r|n","RAG|r|n","AI agents|r|n","MCP|o|n"]},
+ {s:"theory",n:"CS theory for GATE",ph:"y",lv:"Advanced",req:false,about:"Theory of computation, compiler design and discrete maths. Needed for GATE and exams, rarely for jobs.",pre:["c"],files:["TheoryOfComputation Part-1","Crafted_Note CompilerDesign","Crafted_Note Discrete Mathematics Part2"],qa:[],t:["Automata (DFA, NFA)|o|n","Regular expressions and grammars|o|n","Turing machines|o|n","Lexing and parsing|o|n","Code generation|o|n","Sets, relations, graphs|o|n","Logic and proofs|o|n"]},
+ {s:"embedded",n:"Digital electronics & embedded",ph:"y",lv:"Intermediate",req:false,about:"Logic gates up to microprocessors and IoT boards. Fun projects, mostly for ECE or IoT roles.",pre:["c"],files:["Crafted_Note Digital","Digital Project Ideas","8086 project ideas","ESP32 & LoRa project"],qa:[],t:["Logic gates and Boolean algebra|o|n","Combinational and sequential circuits|o|n","8086 architecture and assembly|o|n","ESP32 programming|o|n","LoRa and IoT projects|o|n"]},
+ {s:"graphics",n:"Computer graphics",ph:"y",lv:"Advanced",req:false,about:"How shapes and images are drawn on screen: transforms, projections and rendering.",pre:["c"],files:["Crafted_Note ComputerGraphics"],qa:[],t:["Line and circle drawing|o|n","2D and 3D transforms|o|n","Projections|o|n","Clipping|o|n","Shading basics|o|n"]}
+];
+const SOURCES={
+ c:[["Course","CS50x (Harvard)","https://cs50.harvard.edu/x/","The best intro to programming, starts in C"],["Book","Beej's Guide to C","https://beej.us/guide/bgc/","Free"],["Practice","HackerRank C","https://www.hackerrank.com/domains/c",""]],
+ linux:[["Course","Linux Journey","https://linuxjourney.com","Short lessons"],["Book","The Linux Command Line","https://linuxcommand.org/tlcl.php","Free PDF"],["Practice","OverTheWire: Bandit","https://overthewire.org/wargames/bandit/","Learn by solving levels"]],
+ git:[["Practice","Learn Git Branching","https://learngitbranching.js.org","Visual and interactive"],["Book","Pro Git","https://git-scm.com/book","Chapters 1–3 to start"],["Course","GitHub Skills","https://skills.github.com",""]],
+ java:[["Course","MOOC.fi Java Programming","https://java-programming.mooc.fi","University of Helsinki, many exercises"],["Docs","dev.java/learn","https://dev.java/learn/","Official"],["Docs","Baeldung","https://www.baeldung.com","Quick answers on any Java topic"]],
+ oop:[["Docs","Refactoring.Guru: design patterns","https://refactoring.guru/design-patterns","With diagrams"],["Docs","Baeldung: SOLID","https://www.baeldung.com/solid-principles",""],["Book","Head First Design Patterns","https://www.oreilly.com/library/view/head-first-design/9781492077992/","Paid"]],
+ python:[["Course","Python for Everybody","https://www.py4e.com","Free, beginner friendly"],["Docs","Official Python tutorial","https://docs.python.org/3/tutorial/",""],["Book","Automate the Boring Stuff","https://automatetheboringstuff.com","Free online"]],
+ os:[["Video","Gate Smashers OS (YouTube)","https://www.youtube.com/@GateSmashers","Hindi, exam style"],["Book","Operating Systems: Three Easy Pieces","https://pages.cs.wisc.edu/~remzi/OSTEP/","Free"]],
+ sql:[["Practice","SQLBolt","https://sqlbolt.com","Interactive basics"],["Practice","LeetCode SQL 50","https://leetcode.com/studyplan/top-sql-50/","Interview practice"],["Course","Mode SQL tutorial","https://mode.com/sql-tutorial/","Window functions"]],
+ dbms:[["Video","Gate Smashers DBMS (YouTube)","https://www.youtube.com/@GateSmashers",""],["Docs","Use The Index, Luke","https://use-the-index-luke.com","Indexing"],["Docs","PostgreSQL tutorial","https://www.postgresql.org/docs/current/tutorial.html",""]],
+ network:[["Video","Gate Smashers Computer Networks (YouTube)","https://www.youtube.com/@GateSmashers",""],["Docs","Cloudflare Learning Center","https://www.cloudflare.com/learning/","DNS, CDN and TLS explained simply"],["Docs","MDN: How the web works","https://developer.mozilla.org/en-US/docs/Learn_web_development/Getting_started/Web_standards/How_the_web_works",""]],
+ rest:[["Docs","MDN HTTP","https://developer.mozilla.org/en-US/docs/Web/HTTP","Methods and status codes"],["Docs","restfulapi.net","https://restfulapi.net",""],["Course","Postman Learning Center","https://learning.postman.com",""]],
+ testing:[["Docs","ISTQB Foundation syllabus","https://www.istqb.org/certifications/certified-tester-foundation-level-ctfl-v4-0/","Testing vocabulary"],["Docs","JUnit 5 user guide","https://junit.org/junit5/docs/current/user-guide/",""],["Docs","Mockito","https://site.mockito.org",""]],
+ agile:[["Docs","Atlassian Agile Coach","https://www.atlassian.com/agile",""],["Docs","The Scrum Guide","https://scrumguides.org/scrum-guide.html",""],["Course","Microsoft Excel training","https://support.microsoft.com/en-us/excel",""]],
+ docker:[["Docs","Docker get started","https://docs.docker.com/get-started/",""],["Video","TechWorld with Nana (YouTube)","https://www.youtube.com/@TechWorldwithNana",""],["Practice","Play with Docker","https://labs.play-with-docker.com","In the browser"]],
+ sysdesign:[["Docs","System Design Primer","https://github.com/donnemartin/system-design-primer",""],["Video","ByteByteGo (YouTube)","https://www.youtube.com/@ByteByteGo","Short visual explainers"],["Course","Hello Interview: system design","https://www.hellointerview.com/learn/system-design",""],["Book","Designing Data-Intensive Applications","https://dataintensive.net","Paid"]],
+ interview:[["Docs","Tech Interview Handbook","https://www.techinterviewhandbook.org","Free"],["Practice","Pramp","https://www.pramp.com","Free mock interviews"],["Practice","InterviewBit","https://www.interviewbit.com",""]],
+ aptitude:[["Practice","IndiaBIX aptitude","https://www.indiabix.com/aptitude/questions-and-answers/",""],["Practice","PrepInsta TCS NQT","https://prepinsta.com/tcs-nqt/",""]],
+ dsa:[["Course","Striver's A2Z DSA sheet","https://takeuforward.org/strivers-a2z-dsa-course/strivers-a2z-dsa-course-sheet-2","Videos for every topic"],["Course","NeetCode roadmap","https://neetcode.io/roadmap",""],["Practice","LeetCode","https://leetcode.com",""],["Practice","VisuAlgo","https://visualgo.net","See algorithms animate"]],
+ htmlcss:[["Course","freeCodeCamp Responsive Web Design","https://www.freecodecamp.org/learn/2022/responsive-web-design/","Projects and a certificate"],["Course","web.dev Learn CSS","https://web.dev/learn/css",""],["Practice","Flexbox Froggy","https://flexboxfroggy.com","Game"],["Practice","Grid Garden","https://cssgridgarden.com","Game"]],
+ js:[["Docs","javascript.info","https://javascript.info","Read parts 1 and 2"],["Book","Eloquent JavaScript","https://eloquentjavascript.net","Free online"],["Course","The Odin Project","https://www.theodinproject.com",""]],
+ ts:[["Docs","TypeScript Handbook","https://www.typescriptlang.org/docs/handbook/intro.html",""],["Course","Total TypeScript free tutorials","https://www.totaltypescript.com/tutorials",""]],
+ react:[["Docs","react.dev/learn","https://react.dev/learn","The official tutorial"],["Course","Full Stack Open","https://fullstackopen.com/en/","React + Node"],["Docs","TanStack Query","https://tanstack.com/query/latest",""]],
+ spring:[["Docs","Spring guides","https://spring.io/guides",""],["Course","Spring Academy","https://spring.academy/courses","Official, free"],["Video","Amigoscode (YouTube)","https://www.youtube.com/@amigoscode",""]],
+ nosql:[["Course","MongoDB University","https://learn.mongodb.com","Free"],["Course","Redis University","https://redis.io/university/",""]],
+ node:[["Docs","Node.js Learn","https://nodejs.org/en/learn",""],["Course","Full Stack Open part 3","https://fullstackopen.com/en/part3",""]],
+ angular:[["Course","angular.dev tutorials","https://angular.dev/tutorials",""],["Docs","RxJS","https://rxjs.dev/guide/overview",""]],
+ selenium:[["Docs","Selenium documentation","https://www.selenium.dev/documentation/",""],["Course","Test Automation University","https://testautomationu.applitools.com","Free courses"],["Practice","The Internet (demo site)","https://the-internet.herokuapp.com","Practice pages"]],
+ playwright:[["Docs","Playwright docs","https://playwright.dev/docs/intro",""],["Course","Test Automation University","https://testautomationu.applitools.com",""]],
+ restassured:[["Docs","REST Assured","https://rest-assured.io",""],["Practice","Restful Booker API","https://restful-booker.herokuapp.com","Practice API"],["Course","Postman Learning Center","https://learning.postman.com",""]],
+ perf:[["Docs","Apache JMeter user manual","https://jmeter.apache.org/usermanual/index.html",""],["Docs","k6 docs","https://grafana.com/docs/k6/latest/",""]],
+ aitest:[["Docs","Prompt engineering guide","https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/overview",""],["Course","DeepLearning.AI short courses","https://www.deeplearning.ai/short-courses/",""]],
+ netadv:[["Video","Jeremy's IT Lab (YouTube)","https://www.youtube.com/@JeremysITLab","Free CCNA course"],["Course","Cisco Networking Academy","https://www.netacad.com","Free intro courses"]],
+ k8s:[["Docs","Kubernetes basics","https://kubernetes.io/docs/tutorials/kubernetes-basics/",""],["Practice","Killercoda playgrounds","https://killercoda.com","Free clusters in the browser"],["Video","TechWorld with Nana (YouTube)","https://www.youtube.com/@TechWorldwithNana",""]],
+ aws:[["Course","AWS Skill Builder: Cloud Practitioner Essentials","https://skillbuilder.aws","Free"],["Docs","AWS free tier","https://aws.amazon.com/free/",""],["Docs","AWS documentation","https://docs.aws.amazon.com",""]],
+ cicd:[["Docs","GitHub Actions docs","https://docs.github.com/en/actions",""],["Course","GitHub Skills","https://skills.github.com",""]],
+ messaging:[["Course","Confluent Developer: Kafka courses","https://developer.confluent.io/courses/",""],["Docs","RabbitMQ tutorials","https://www.rabbitmq.com/tutorials",""],["Docs","Elasticsearch reference","https://www.elastic.co/guide/en/elasticsearch/reference/current/index.html",""]],
+ math:[["Video","3Blue1Brown: Essence of linear algebra","https://www.3blue1brown.com/topics/linear-algebra","Visual intuition"],["Course","Khan Academy Calculus","https://www.khanacademy.org/math/calculus-1",""],["Book","Mathematics for Machine Learning","https://mml-book.github.io","Free PDF"]],
+ ml:[["Course","Machine Learning Specialization (Andrew Ng)","https://www.coursera.org/specializations/machine-learning-introduction","Free to audit"],["Course","Kaggle Learn","https://www.kaggle.com/learn","Short, hands-on"],["Docs","scikit-learn user guide","https://scikit-learn.org/stable/user_guide.html",""]],
+ datamining:[["Course","Kaggle Learn: pandas","https://www.kaggle.com/learn/pandas",""],["Book","Mining of Massive Datasets","http://www.mmds.org","Free"]],
+ dl:[["Course","fast.ai Practical Deep Learning","https://course.fast.ai","Free"],["Course","Deep Learning Specialization","https://www.coursera.org/specializations/deep-learning","Free to audit"],["Docs","PyTorch tutorials","https://pytorch.org/tutorials/",""]],
+ genai:[["Course","Anthropic courses","https://github.com/anthropics/courses","Prompting and tool use"],["Course","Hugging Face courses","https://huggingface.co/learn",""],["Docs","Model Context Protocol","https://modelcontextprotocol.io",""],["Course","DeepLearning.AI short courses","https://www.deeplearning.ai/short-courses/","RAG and agents"]],
+ theory:[["Video","Neso Academy (YouTube)","https://www.youtube.com/@nesoacademy","TOC and digital"],["Book","Crafting Interpreters","https://craftinginterpreters.com","Free, compilers made practical"],["Course","MIT 6.042J Mathematics for CS","https://ocw.mit.edu/courses/6-042j-mathematics-for-computer-science-fall-2010/",""]],
+ embedded:[["Course","Nand2Tetris","https://www.nand2tetris.org","From logic gates to a computer"],["Docs","ESP32 get started (Espressif)","https://docs.espressif.com/projects/esp-idf/en/latest/esp32/get-started/",""],["Video","Neso Academy Digital Electronics","https://www.youtube.com/@nesoacademy",""]],
+ graphics:[["Book","Ray Tracing in One Weekend","https://raytracing.github.io","Free"],["Book","Learn OpenGL","https://learnopengl.com","Free"]]
+};
+const DSA=[["1","6","Time complexity, arrays, strings, patterns",["Time complexity","Array & String problems","Java Star Pattern"]],["7","12","Recursion, sorting, searching, two pointers, hashing",["Recursion","Sorting And Searching","Coding Pattern"]],["13","16","Stack, queue, linked list, trees",["Stack & Quoue","Tree & Graph"]],["T","T","Graphs, heaps, dynamic programming, greedy, backtracking; then mixed practice",["Tree and Graph","DSASheet","70 DSA Java Interview Solutions"]]];
+
+/* ===== DERIVED ===== */
+const esc=s=>String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/"/g,"&quot;");
+const chips=f=>f.map(x=>`<span class="file">${esc(x)}</span>`).join("");
+const CORE_PH=PHASES.map((p,i)=>i).filter(i=>!PHASES[i].track), TRACK_PH=PHASES.map((p,i)=>i).filter(i=>PHASES[i].track);
+let wk=0; STEPS.filter(s=>!PHASES[s.p].track).forEach(st=>{st.from=wk+1;wk+=st.w;st.to=wk});
+const CORE_WEEKS=wk;
+TRACK_PH.forEach(p=>{let w=CORE_WEEKS;STEPS.filter(s=>s.p===p).forEach(st=>{st.from=w+1;w+=st.w;st.to=w});PHASES[p].weeks=w-CORE_WEEKS;PHASES[p].end=w});
+const stepBy=Object.fromEntries(STEPS.map(s=>[s.s,s]));
+const C=COURSES.map(c=>({...c,topics:c.t.map((x,i)=>{const [name,rq,src]=x.split("|");return{name,rq,src,id:`${c.s}-${i}`}})}));
+const CB=Object.fromEntries(C.map(c=>[c.s,c]));
+const groupOf=p=>p==="x"?GROUPS_EXTRA[0]:p==="y"?GROUPS_EXTRA[1]:PHASES[p];
+const phColor=p=>groupOf(p).c, phName=p=>groupOf(p).name;
+const range=(a,b)=>a===b?`Week ${a}`:`Weeks ${a}–${b}`;
+const isTrack=p=>typeof p==="number"&&!!PHASES[p].track;
+
+/* ===== STATE (this browser only) ===== */
+const load=k=>{try{return new Set(JSON.parse(localStorage.getItem(k)||"[]"))}catch(e){return new Set()}};
+const store=(k,s)=>{try{localStorage.setItem(k,JSON.stringify([...s]))}catch(e){}};
+const doneSteps=load("sd-roadmap-steps"), doneTopics=load("sd-roadmap-topics");
+let track=5; try{const t=+localStorage.getItem("sd-roadmap-track");if(TRACK_PH.includes(t))track=t}catch(e){}
+const setTrack=t=>{track=t;try{localStorage.setItem("sd-roadmap-track",t)}catch(e){}};
+const mySteps=()=>STEPS.filter(s=>!isTrack(s.p)||s.p===track);
+const myCourse=c=>!isTrack(c.ph)||c.ph===track||c.ph==="x"||mySteps().some(s=>s.c.includes(c.s));
+const allTopics=C.flatMap(c=>c.topics);
+const cdone=c=>c.topics.filter(t=>doneTopics.has(t.id)).length;
+const pct=(a,b)=>b?Math.round(a/b*100):0;
+const totalWeeks=()=>CORE_WEEKS+PHASES[track].weeks;
+const months=w=>Math.round(w/4.33);
+const courseSteps=c=>{const own=STEPS.filter(s=>s.c.includes(c.s)&&(!isTrack(s.p)||s.p===c.ph));return own.length?own:STEPS.filter(s=>s.c.includes(c.s)&&s.p===track)};
+
+/* ===== SHARED BITS ===== */
+const chip=s=>`<a class="chip" style="--c:var(${phColor(CB[s].ph)})" href="#course-${s}" data-go="course-${s}">${esc(CB[s].n)}</a>`;
+function picker(id){
+  document.getElementById(id).innerHTML=TRACK_PH.map(p=>`<button class="pick" type="button" data-track="${p}" style="--c:var(${PHASES[p].c})" aria-pressed="${p===track}"><span class="track-tag">Track ${PHASES[p].track}</span><b>${esc(PHASES[p].name)}</b><span>${esc(PHASES[p].tag)}</span><em>${PHASES[p].weeks} weeks · ${range(CORE_WEEKS+1,PHASES[p].end)}</em></button>`).join("");
+}
+function phaseCard(i){
+  const p=PHASES[i], ss=STEPS.filter(s=>s.p===i), cs=C.filter(c=>c.ph===i);
+  const tt=cs.flatMap(c=>c.topics), d=tt.filter(t=>doneTopics.has(t.id)).length;
+  return `<div class="card phase-card" style="--c:var(${p.c})">
+    <div class="ph-top"><span class="eyebrow">${p.track?"Track "+p.track:"Core "+(i+1)}</span><span class="eyebrow">${range(ss[0].from,ss[ss.length-1].to)}</span></div>
+    <h3><a href="#plan" data-go="plan" data-scroll="ph${i}">${esc(p.name)}</a></h3>
+    <div>${cs.map(c=>chip(c.s)).join("")}</div>
+    <div class="bar"><i class="d" style="width:${pct(d,tt.length)}%"></i></div>
+    <span class="muted" style="font-size:.78rem">${ss.length} steps · ${d} of ${tt.length} topics done</span></div>`;
+}
+
+/* ===== OVERVIEW ===== */
+function renderOverview(){
+  const ms=mySteps(), td=allTopics.filter(t=>doneTopics.has(t.id)).length, sd=ms.filter(s=>doneSteps.has(s.s));
+  const tw=totalWeeks();
+  document.getElementById("pace-months").textContent=`${months(tw)} months`;
+  document.getElementById("tiles").innerHTML=[
+    [`${sd.length}/${ms.length}`,"steps finished (core + your track)"],
+    [`${tw-sd.reduce((a,s)=>a+s.w,0)}`,"weeks left at your pace"],
+    [`${CORE_WEEKS}`,"weeks of core, then your track"],
+    [pct(td,allTopics.length)+"%",`of all topics learned (${td} of ${allTopics.length})`]
+  ].map(([b,s])=>`<div class="tile"><b>${b}</b><span>${s}</span></div>`).join("");
+  const seg=[...CORE_PH,track].map(i=>{const w=STEPS.filter(s=>s.p===i).reduce((a,s)=>a+s.w,0);return`<i style="--c:var(${PHASES[i].c});flex:${w}" title="${esc(PHASES[i].name)}"></i>`});
+  document.getElementById("timeline").innerHTML=seg.join("");
+  document.getElementById("tl-labels").innerHTML=`<span>Week 1</span><span>Core ends · week ${CORE_WEEKS}</span><span>Week ${tw} · month ${months(tw)}</span>`;
+  document.getElementById("core-track").innerHTML=CORE_PH.map(phaseCard).join("");
+  picker("picker-ov");
+  document.getElementById("extra-track").innerHTML=phaseCard(track)+GROUPS_EXTRA.map(g=>`<div class="card phase-card" style="--c:var(${g.c})"><div class="ph-top"><span class="eyebrow">${g.key==="x"?"Alongside":"Optional"}</span><span class="eyebrow">${g.key==="x"?"Weekends":"Any time"}</span></div><h3>${esc(g.name)}</h3><div>${C.filter(c=>c.ph===g.key).map(c=>chip(c.s)).join("")}</div><span class="muted" style="font-size:.78rem">${esc(g.note)}</span></div>`).join("");
+  document.getElementById("track-outcomes").innerHTML=`<li><b>Track ${PHASES[track].track}: ${esc(PHASES[track].name)}</b></li>`+PHASES[track].out.map(o=>`<li>${esc(o)}</li>`).join("");
+  const n=allTopics.filter(t=>t.src==="n").length,q=allTopics.filter(t=>t.src==="q").length,m=allTopics.length-n-q;
+  document.getElementById("cov-summary").innerHTML=`<div class="cov"><i class="n" style="flex:${n}"></i><i class="q" style="flex:${q}"></i><i class="m" style="flex:${m}"></i></div><p class="muted" style="font-size:.82rem;margin-top:6px">${n} topics in your notes · ${q} interview Q&amp;A only · ${m} not in folder</p>`;
+  document.getElementById("file-count").textContent=`All ${FILES.length} files in your folder are used by a course: ${C.length} courses across the core, 4 tracks, weekend DSA and optional side tracks.`;
+  document.getElementById("gap-chips").innerHTML=C.filter(c=>c.topics.filter(t=>t.src!=="n").length>=c.topics.length/2).map(c=>chip(c.s)).join("");
+}
+
+/* ===== PLAN ===== */
+function stepRow(st){
+  const learn=[...new Set(st.c)].map(s=>SOURCES[s]&&SOURCES[s][0]).filter(Boolean);
+  return `<div class="step${doneSteps.has(st.s)?" is-done":""}" id="s${st.s}">
+    <input type="checkbox" id="chk-${st.s}" data-step="${st.s}" ${doneSteps.has(st.s)?"checked":""} aria-label="Mark step ${st.s} done">
+    <div class="sn"><label for="chk-${st.s}">STEP ${st.s.padStart(2,"0")}</label><span>${range(st.from,st.to)}</span><span>${st.w} week${st.w>1?"s":""}</span></div>
+    <div class="sbody"><div class="topics">${esc(st.t)}</div>
+      <div class="kv"><span class="k">Course</span><span class="v">${st.c.map(chip).join("")}</span></div>
+      ${st.f.length?`<div class="kv"><span class="k">Read</span><span class="v">${chips(st.f)}</span></div>`:""}
+      <div class="kv"><span class="k">Learn</span><span class="v">${learn.map(x=>`<a href="${x[2]}" target="_blank" rel="noopener">${esc(x[1])} ↗</a>`).join("")}</span></div>
+      <div class="kv"><span class="k">Build</span><span class="v">${esc(st.b)}</span></div></div></div>`;
+}
+function phaseSection(i){
+  const p=PHASES[i], ss=STEPS.filter(s=>s.p===i);
+  return `<section class="phase" id="ph${i}" style="--c:var(${p.c})">
+    <div class="phase-head"><span class="eyebrow">${p.track?"Track "+p.track:"Core phase "+(i+1)} · ${range(ss[0].from,ss[ss.length-1].to)} · ${ss.reduce((a,s)=>a+s.w,0)} weeks</span><h2>${esc(p.name)}</h2><p class="muted" style="font-size:.92rem">${esc(p.note)}${i===5?` <a href="Full_Stack_Study_Plan.html">Open the full stack plan</a>.`:""}</p></div>
+    <div class="steps">${ss.map(stepRow).join("")}</div>
+    ${p.after?`<div class="callout"><b>${esc(p.after.split(":")[0])}:</b>${esc(p.after.slice(p.after.indexOf(":")+1))}</div>`:""}</section>`;
+}
+function renderPlan(){
+  const ms=mySteps();
+  document.getElementById("plan-eyebrow").textContent=`${ms.length} steps · ${totalWeeks()} weeks · at 30 min a day`;
+  document.getElementById("strip").innerHTML=ms.map(st=>`<button class="cell${doneSteps.has(st.s)?" done":""}" type="button" style="--c:var(${PHASES[st.p].c});flex:${st.w}" data-scroll="s${st.s}" title="Step ${st.s}: ${esc(range(st.from,st.to))}" aria-label="Go to step ${st.s}"></button>`).join("");
+  document.getElementById("legend").innerHTML=[...CORE_PH,track].map(i=>`<button type="button" data-scroll="ph${i}"><span class="dot" style="--c:var(${PHASES[i].c})"></span>${esc(PHASES[i].name)}</button>`).join("");
+  document.getElementById("phases").innerHTML=CORE_PH.map(phaseSection).join("");
+  picker("picker-plan");
+  document.getElementById("track-phase").innerHTML=phaseSection(track);
+  const T=STEPS.filter(s=>s.p===track);
+  document.getElementById("dsa-body").innerHTML=DSA.map(([a,b,t,f])=>{const from=a==="T"?T[0].from:stepBy[a].from,to=b==="T"?T[T.length-1].to:stepBy[b].to;return`<tr><td>${range(from,to)}</td><td>${esc(t)}</td><td>${chips(f)}</td></tr>`}).join("");
+  document.getElementById("plan-prog").textContent=`${ms.filter(s=>doneSteps.has(s.s)).length} of ${ms.length} steps done`;
+}
+
+/* ===== COURSES ===== */
+const filt={level:"all",show:"all",q:""};
+function courseCard(c){
+  const n=c.topics.filter(t=>t.src==="n").length,q=c.topics.filter(t=>t.src==="q").length,m=c.topics.length-n-q,d=cdone(c);
+  const label=isTrack(c.ph)?(c.req?"Track":"Track · optional"):(c.ph==="y"?"Optional":(c.req?"Core":"Optional"));
+  return `<a class="card ccard${c.req&&c.ph!=="y"?"":" opt"}" style="--c:var(${phColor(c.ph)})" href="#course-${c.s}" data-go="course-${c.s}">
+    <div class="c-top"><h3>${esc(c.n)}</h3><span class="pill${!isTrack(c.ph)&&c.req&&c.ph!=="y"?" req":""}">${label}</span></div>
+    <p class="about">${esc(c.about)}</p>
+    <div class="cov" title="${n} in notes, ${q} Q&amp;A only, ${m} not in folder"><i class="n" style="flex:${n}"></i><i class="q" style="flex:${q}"></i><i class="m" style="flex:${m}"></i></div>
+    <div class="meta"><span>${c.lv} · ${c.topics.length} topics${m?` · ${m} not in folder`:""}</span><span>${d}/${c.topics.length} done</span></div>
+    <span class="go">Open course →</span></a>`;
+}
+function renderCourses(){
+  document.getElementById("courses-eyebrow").textContent=`${C.length} courses · core, 4 tracks and side tracks`;
+  const q=filt.q.toLowerCase();
+  const match=c=>(filt.level==="all"||c.lv===filt.level)&&(filt.show==="all"||(filt.show==="core"&&!isTrack(c.ph)&&c.ph!=="y")||(filt.show==="mine"&&myCourse(c)&&c.ph!=="y")||(filt.show==="gaps"&&c.topics.some(t=>t.src!=="n")))&&(!q||c.n.toLowerCase().includes(q)||c.topics.some(t=>t.name.toLowerCase().includes(q)));
+  const groups=[...PHASES.map((p,i)=>({key:i,name:(p.track?`Track ${p.track} · `:`Core ${i+1} · `)+p.name,c:p.c})),...GROUPS_EXTRA];
+  let shown=0;
+  document.getElementById("cgroups").innerHTML=groups.map(g=>{
+    const cs=C.filter(c=>c.ph===g.key&&match(c)); if(!cs.length)return""; shown+=cs.length;
+    return `<div class="ph-group"><h3><span class="dot" style="--c:var(${g.c})"></span>${esc(g.name)}${g.key===track?' <span class="pill">Your track</span>':""}</h3><div class="cgrid">${cs.map(courseCard).join("")}</div></div>`;
+  }).join("");
+  document.getElementById("c-empty").hidden=shown>0;
+  document.getElementById("files-body").innerHTML=FILES.map(([f,cs])=>`<tr><td><span class="file">${esc(f)}</span></td><td>${cs.map(chip).join("")}</td><td class="muted">${esc([...new Set(cs.map(s=>phName(CB[s].ph)))].join(", "))}</td></tr>`).join("");
+}
+const FILES=(()=>{const m=new Map();C.forEach(c=>[...c.files,...c.qa].forEach(f=>{if(!m.has(f))m.set(f,[]);if(!m.get(f).includes(c.s))m.get(f).push(c.s)}));return[...m.entries()].sort((a,b)=>a[0].localeCompare(b[0]))})();
+
+/* ===== COURSE DETAIL ===== */
+const srcText={n:"Your notes",q:"Q&A only",m:"Online only"};
+function renderCourse(slug){
+  const c=CB[slug]; const el=document.getElementById("v-course");
+  if(!c){el.innerHTML=`<p>That course was not found. <a href="#courses" data-go="courses">See all courses</a>.</p>`;return}
+  const idx=C.indexOf(c), prev=C[idx-1], next=C[idx+1];
+  const n=c.topics.filter(t=>t.src==="n").length,q=c.topics.filter(t=>t.src==="q").length,m=c.topics.length-n-q,d=cdone(c);
+  const src=SOURCES[c.s]||[]; const practice=src.find(s=>s[0]==="Practice");
+  const steps=courseSteps(c), weeks=steps.reduce((a,s)=>a+s.w,0);
+  const when=steps.length?range(steps[0].from,steps[steps.length-1].to):(c.s==="dsa"?"Every weekend":"Any time, optional");
+  const topicRow=t=>`<li class="${doneTopics.has(t.id)?"checked":""}"><input type="checkbox" id="t-${t.id}" data-topic="${t.id}" ${doneTopics.has(t.id)?"checked":""}><label for="t-${t.id}">${esc(t.name)}</label><span class="tstat"><i class="st st-${t.src}"></i>${srcText[t.src]}</span></li>`;
+  const req=c.topics.filter(t=>t.rq==="r"), opt=c.topics.filter(t=>t.rq==="o");
+  const role=isTrack(c.ph)?`Track ${PHASES[c.ph].track} · ${esc(PHASES[c.ph].name)}`:c.ph==="x"?"Every weekend":c.ph==="y"?"Optional side track":`Core phase ${c.ph+1} · ${esc(PHASES[c.ph].name)}`;
+  const kind=isTrack(c.ph)?(c.req?"Required in this track":"Optional in this track"):c.ph==="y"?"Optional":(c.req?"Required for everyone":"Optional");
+  const howto=[
+    c.files.length?`<b>Skim your notes</b> to see the whole topic first: ${chips(c.files.slice(0,4))}${c.files.length>4?` <span class="muted">+${c.files.length-4} more on the right</span>`:""}`:`<b>Your folder has no notes for this course.</b> Start straight from the online source.`,
+    src[0]?`<b>Learn it properly</b> from <a href="${src[0][2]}" target="_blank" rel="noopener">${esc(src[0][1])} ↗</a>, 20 minutes each weekday.`:"",
+    practice?`<b>Practise</b> on <a href="${practice[2]}" target="_blank" rel="noopener">${esc(practice[1])} ↗</a> or by writing the examples yourself.`:`<b>Practise</b> by writing every example yourself and committing it to GitHub.`,
+    steps.length?`<b>Build</b> on weekends: ${esc(steps[0].b)}.`:"",
+    c.qa.length?`<b>Test yourself</b> with ${chips(c.qa.slice(0,3))}${c.qa.length>3?` <span class="muted">+${c.qa.length-3} more</span>`:""} and tick the topics below that you can explain.`:`<b>Test yourself</b>: explain each topic below in your own words, then tick it.`
+  ].filter(Boolean);
+  const after=C.filter(x=>x.pre.includes(c.s));
+  el.innerHTML=`
+    <nav class="crumb"><a href="#courses" data-go="courses">← All courses</a> <span class="muted">/ ${esc(phName(c.ph))}</span></nav>
+    <section class="c-hero" style="--c:var(${phColor(c.ph)})">
+      <span class="eyebrow">${role}</span>
+      <h1>${esc(c.n)}</h1>
+      <div class="pills"><span class="pill${c.req&&c.ph!=="y"?" req":""}">${kind}</span><span class="pill">${c.lv}</span>${steps.map(st=>`<a class="pill" href="#plan" data-go="plan" data-scroll="s${st.s}" style="text-decoration:none">Step ${st.s}</a>`).join("")}</div>
+      <p class="lede">${esc(c.about)}</p>
+      <div class="facts">
+        <div><b>${weeks?weeks+(weeks>1?" weeks":" week"):"—"}</b><span>${when}</span></div>
+        <div><b>${c.topics.length}</b><span>topics (${req.length} required)</span></div>
+        <div><b>${c.files.length+c.qa.length}</b><span>files in your folder</span></div>
+        <div><b>${src.length}</b><span>online sources</span></div>
+      </div>
+      <div class="prog"><div class="bar"><i class="d" style="width:${pct(d,c.topics.length)}%"></i></div><span>${d} of ${c.topics.length} topics done</span></div>
+    </section>
+    <div class="dgrid">
+      <div class="dmain">
+        <section class="card"><h2>How to study this course</h2><ol class="howto">${howto.map(h=>`<li><div>${h}</div></li>`).join("")}</ol></section>
+        <section class="card">
+          <div class="sec-head"><h2>Topics</h2><div class="key"><span><i class="st st-n"></i>${n}</span><span><i class="st st-q"></i>${q}</span><span><i class="st st-m"></i>${m}</span></div></div>
+          <div class="cov"><i class="n" style="flex:${n}"></i><i class="q" style="flex:${q}"></i><i class="m" style="flex:${m}"></i></div>
+          ${req.length?`<div class="tgroup-h"><h3>Required</h3><span class="eyebrow">${req.length}</span></div><ul class="tlist">${req.map(topicRow).join("")}</ul>`:""}
+          ${opt.length?`<div class="tgroup-h"><h3>Optional</h3><span class="eyebrow">${opt.length}</span></div><ul class="tlist">${opt.map(topicRow).join("")}</ul>`:""}
+        </section>
+        ${steps.length?`<section class="card"><h2>What you'll build</h2><ul class="clean build-list">${steps.map(st=>`<li><b>Step ${st.s}</b> <span class="muted">(${range(st.from,st.to)})</span>: ${esc(st.b)}</li>`).join("")}</ul></section>`:""}
+      </div>
+      <aside class="dside">
+        <section class="card"><h2>Best online sources</h2><p class="muted" style="font-size:.85rem">Start with the first one. All free unless marked paid.</p>
+          <div class="srcs">${src.map((s,i)=>`<a class="src${i===0?" first":""}" href="${s[2]}" target="_blank" rel="noopener"><span class="stype">${i===0?"Start":esc(s[0])}</span><b>${esc(s[1])} ↗</b><em>${i===0?esc(s[0])+(s[3]?" · ":""):""}${esc(s[3])}</em></a>`).join("")}</div></section>
+        <section class="card"><h2>From your folder</h2>
+          ${c.files.length?`<h3 style="font-size:.9rem">Notes</h3><ul class="flist">${c.files.map(f=>`<li class="${/\.png$/.test(f)?"img":""}">${esc(f)}</li>`).join("")}</ul>`:`<p class="muted" style="font-size:.88rem">No notes for this course in your folder.</p>`}
+          ${c.qa.length?`<h3 style="font-size:.9rem;margin-top:6px">Interview questions</h3><ul class="flist">${c.qa.map(f=>`<li>${esc(f)}</li>`).join("")}</ul>`:""}
+        </section>
+        <section class="card"><h2>Before this course</h2>
+          ${c.pre.length?`<div>${c.pre.map(chip).join("")}</div>`:`<p class="muted" style="font-size:.88rem">Nothing. You can start this one right away.</p>`}
+          ${after.length?`<h3 style="font-size:.9rem;margin-top:6px">This unlocks</h3><div>${after.map(x=>chip(x.s)).join("")}</div>`:""}
+        </section>
+      </aside>
+    </div>
+    <nav class="pn">${prev?`<a href="#course-${prev.s}" data-go="course-${prev.s}"><span>← Previous</span>${esc(prev.n)}</a>`:""}${next?`<a class="next" href="#course-${next.s}" data-go="course-${next.s}"><span>Next →</span>${esc(next.n)}</a>`:""}</nav>`;
+}
+
+/* ===== ROUTER ===== */
+let current="overview";
+function show(target,scrollId){
+  const v=target.startsWith("course-")?"course":(["overview","plan","courses"].includes(target)?target:"overview");
+  current=target;
+  ["overview","plan","courses","course"].forEach(x=>document.getElementById("v-"+x).hidden=x!==v);
+  document.querySelectorAll("[data-tab]").forEach(a=>{if(a.dataset.tab===(v==="course"?"courses":v))a.setAttribute("aria-current","page");else a.removeAttribute("aria-current")});
+  if(v==="overview")renderOverview(); if(v==="plan")renderPlan(); if(v==="courses")renderCourses(); if(v==="course")renderCourse(target.slice(7));
+  const ms=mySteps(), tp=allTopics.filter(t=>doneTopics.has(t.id)).length;
+  document.getElementById("top-prog").textContent=`${pct(tp,allTopics.length)}% learned · ${ms.filter(s=>doneSteps.has(s.s)).length}/${ms.length} steps`;
+  const smooth=!matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if(scrollId){const t=document.getElementById(scrollId);if(t){if(t.tagName==="DETAILS")t.open=true;requestAnimationFrame(()=>t.scrollIntoView({behavior:smooth?"smooth":"auto",block:"start"}))}}
+  else window.scrollTo(0,0);
+}
+function go(target,scrollId){try{history.pushState(null,"","#"+target)}catch(e){} show(target,scrollId)}
+function rerender(){const y=scrollY;show(current);scrollTo(0,y)}
+document.addEventListener("click",e=>{
+  const pk=e.target.closest("[data-track]"); if(pk){setTrack(+pk.dataset.track);rerender();return}
+  const a=e.target.closest("[data-go],[data-scroll]"); if(!a)return;
+  if(a.dataset.go){e.preventDefault();go(a.dataset.go,a.dataset.scroll)}
+  else if(a.dataset.scroll){e.preventDefault();const t=document.getElementById(a.dataset.scroll);if(t)t.scrollIntoView({behavior:"smooth",block:"start"})}
+});
+document.addEventListener("change",e=>{
+  const s=e.target.dataset.step, t=e.target.dataset.topic;
+  if(s){e.target.checked?doneSteps.add(s):doneSteps.delete(s);store("sd-roadmap-steps",doneSteps);rerender()}
+  if(t){e.target.checked?doneTopics.add(t):doneTopics.delete(t);store("sd-roadmap-topics",doneTopics);rerender()}
+});
+document.getElementById("reset").addEventListener("click",()=>{doneSteps.clear();store("sd-roadmap-steps",doneSteps);show("plan")});
+[["f-level","level"],["f-show","show"]].forEach(([gid,key])=>document.getElementById(gid).addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;filt[key]=b.dataset.v;document.querySelectorAll(`#${gid} button`).forEach(x=>x.setAttribute("aria-pressed",x===b));renderCourses()}));
+document.getElementById("f-search").addEventListener("input",e=>{filt.q=e.target.value.trim();renderCourses()});
+const fromHash=()=>{const h=location.hash.slice(1);show(h||"overview")};
+window.addEventListener("popstate",fromHash);
+window.addEventListener("hashchange",fromHash);
+fromHash();
+</script>
+</html>
